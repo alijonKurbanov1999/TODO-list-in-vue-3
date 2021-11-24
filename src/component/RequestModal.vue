@@ -50,28 +50,6 @@ export default {
       this.$store.dispatch('cancelModal', false)
     }
   }
-
-  // setup(props, {emit}) {
-  //   const lastName = ref('')
-  //   const firstName = ref('')
-  //   const email = ref('')
-  //   const CreateList = () => {
-  //     emit('Create-list', {
-  //       last_name: lastName.value,
-  //       first_name: firstName.value,
-  //       email: email.value
-  //     })
-  //     lastName.value = ''
-  //     firstName.value = ''
-  //     email.value = ''
-  //
-  //   }
-  //   return{
-  //     lastName, firstName, email,
-  //     CreateList,
-  //     // complete: computed(()=> lastName.value && firstName.value === '')
-  //   }
-  // }
 }
 </script>
 

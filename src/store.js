@@ -6,7 +6,6 @@ const store = new Vuex.Store({
         flag: false,
         peopleList: [],
         personInfo: null,
-        search: '',
     },
     mutations: {
         OPEN_MODAL(state, payload) {
@@ -22,46 +21,45 @@ const store = new Vuex.Store({
           state.peopleList.push(payload)
         },
         REMOVE_USER(state, payload) {
-            state.peopleList.splice(payload, 1)
-            console.log('REMOVED: ', state.peopleList.findIndex(p => p.id === payload))
+            state.peopleList.filter(p => p.id !== payload)
         },
         DETAILS_USER(state, payload) {
-            // console.log('PERSON INFO: ', payload)
             state.personInfo = payload
         }
     },
     actions: {
         openModal({commit}, payload) {
-            // console.log('flag is: ', payload)
             commit('OPEN_MODAL', payload)
         },
         cancelModal({commit}, payload) {
-            // console.log('FLAG IS: ', payload)
             commit('CANCEL_MODAL', payload)
         },
-        initData({commit}) {
-          axios.get('http://localhost:3000/people')
+        initData(context) {
+          axios.get(process.env.VUE_APP_API_DATA)
               .then(res => {
                   console.log('INIT DATA IS: ', res.data)
-                  commit('INIT_DATA', res.data)
+                  context.commit('INIT_DATA', res.data)
               }).catch(err => console.error('ERROR: ', err))
         },
-        createUser({commit}, userData) {
-            // console.log('USERDATA ARE: ', userData)
-            axios.post('http://localhost:3000/people', userData)
+        createUser(context, userData) {
+            axios.post(process.env.VUE_APP_API_DATA , userData)
                 .then(response => {
                     console.log('response result: ', {...response.data})
-                    commit('CREATE_USER', response.data)
+                    context.commit('CREATE_USER', response.data)
                 }).catch(err => {console.error('ERROR: ', err)})
 
         },
         removeUser({commit}, payload) {
-            commit('REMOVE_USER', payload)
-        },
-        detailsUser({commit}, payload) {
-            axios.get(`http://localhost:3000/people/${payload}`)
+            axios.delete(`${process.env.VUE_APP_API_DATA}/${payload}`)
                 .then(response => {
-                    commit('DETAILS_USER', response.data)
+                    console.log('REMOVED :', response.data.id)
+                    commit('REMOVE_USER', response.data.id)
+                }).catch(err => {console.error('ERROR: ', err)})
+        },
+        detailsUser(context, payload) {
+            axios.get(`${process.env.VUE_APP_API_DATA}/${payload}`)
+                .then(response => {
+                    context.commit('DETAILS_USER', response.data)
                 }).catch(err => {console.error('ERROR: ', err)})
         }
     },
@@ -70,10 +68,7 @@ const store = new Vuex.Store({
             return state.flag
         },
         peopleList(state) {
-            return state.peopleList.filter(p => state.search ? p.first_name.toLowerCase().includes(state.search.toLowerCase()) : true)
-        },
-        search(state) {
-            return state.search
+            return state.peopleList
         },
         personInfo(state) {
             return state.personInfo

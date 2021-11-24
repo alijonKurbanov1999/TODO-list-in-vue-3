@@ -1,3 +1,6 @@
 /.idea
 /__MACOSX
 /node_modules
+/db.json
+/.env
+/.env.production

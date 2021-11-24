@@ -7,7 +7,6 @@
     <RequestTable />
   </div>
   <request-modal v-if="flag"/>
-
 </template>
 
 <script>

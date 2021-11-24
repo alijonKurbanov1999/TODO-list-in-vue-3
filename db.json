@@ -41,18 +41,6 @@
       "first_name": "Tracey",
       "email": "tracey.ramos@reqres.in",
       "avatar": "https://reqres.in/img/faces/6-image.jpg"
-    },
-    {
-      "lastName": "Kurbanov",
-      "firstName": "Alijon",
-      "email": "alijon.99@mail.ru",
-      "id": 7
-    },
-    {
-      "last_name": "Kurbanov",
-      "first_name": "ali",
-      "email": "kurbanov.909@mail.ru",
-      "id": 8
     }
   ]
 }

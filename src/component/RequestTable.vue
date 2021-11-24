@@ -15,7 +15,8 @@
       </tr>
       </thead>
       <tbody>
-      <tr v-for="(person, idx) in peopleList" :key="person.id">
+      <tr v-if="Filters.length === 0"><td colspan="5">СПИСОК ПУСТЬ!</td></tr>
+      <tr v-else v-for="(person, idx) in Filters" :key="person.id">
         <td>{{ idx + 1 }}</td>
         <td>{{ person.last_name }}</td>
         <td>{{ person.first_name }}</td>
@@ -40,21 +41,29 @@
 import { mapGetters } from "vuex";
 
 export default {
+  data() {
+    return {
+      search: ''
+    }
+  },
   computed: {
     ...mapGetters({
       peopleList: 'peopleList',
-      search: 'search',
     }),
+    Filters () {
+      console.clear()
+      return this.peopleList
+          .filter(p => {
+            return this.search ? p.first_name.toLowerCase().includes(this.search.toLowerCase()) : true
+          })
+    }
   },
   mounted () {
     this.$store.dispatch('initData')
   },
   methods: {
     removeUser (id) {
-      const personIdx = this.peopleList.findIndex(p => p.id === id)
-      this.$store.dispatch('removeUser', personIdx)
-
-      // axios.delete(`http://localhost:3000/people/${id}`)
+      this.$store.dispatch('removeUser', id)
     }
   }
 }
