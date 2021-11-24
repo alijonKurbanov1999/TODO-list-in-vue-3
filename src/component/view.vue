@@ -3,10 +3,10 @@
     <router-link to="/main" class="text-white">Вернуться к списку</router-link>
   </div>
   <div class="card">
-    <div v-if="person">
-      <p><strong>Фамилия:</strong> {{ person.last_name }}</p>
-      <p><strong>Имя:</strong> {{ person.first_name }}</p>
-      <p><strong>"Электронная почта:</strong> {{ person.email }}</p>
+    <div v-if="personInfo">
+      <p><strong>Фамилия:</strong> {{ personInfo.last_name }}</p>
+      <p><strong>Имя:</strong> {{ personInfo.first_name }}</p>
+      <p><strong>"Электронная почта:</strong> {{ personInfo.email }}</p>
     </div>
     <div>
       <img src="#" title="dsa">
@@ -15,34 +15,17 @@
 </template>
 
 <script>
-import axios from 'axios'
-import { useRoute } from 'vue-router'
+import { mapGetters } from "vuex";
 
 export default {
-  setup() {
-    const route = useRoute()
-    const id = route.params.id
-
-    return {
-      id
-    }
-  },
-  data () {
-    return {
-      person: null
-    }
-  },
+  name: "view",
   mounted () {
-    axios.get(`http://localhost:3000/people/${this.id}`)
-        .then(({ data }) => {
-          data && (this.person = data)
-        })
+    this.$store.dispatch('detailsUser', this.$route.params.id)
   },
-
-  name: "view"
+  computed: {
+    ...mapGetters({
+      personInfo: 'personInfo'
+    })
+  }
 }
 </script>
-
-<style scoped>
-
-</style>

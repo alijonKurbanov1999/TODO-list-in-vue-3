@@ -2,7 +2,7 @@
   <div class="form-control">
     <br>
     <label for="search"></label>
-    <input type="text" placeholder="Поиск по имени" id="search" v-model.trim="filter">
+    <input type="text" placeholder="Поиск по имени" id="search" v-model.trim="search">
     <hr/>
     <table class="table">
       <thead>
@@ -15,19 +15,21 @@
       </tr>
       </thead>
       <tbody>
-      <tr v-for="(person, idx) in Filters" :key="person.id">
+      <tr v-for="(person, idx) in peopleList" :key="person.id">
         <td>{{ idx + 1 }}</td>
         <td>{{ person.last_name }}</td>
         <td>{{ person.first_name }}</td>
         <td>{{ person.email }}</td>
         <td>
-          <button
-              @click="goToViewTable(person.id)"
-              class="btn"
-          >
-            Посмотреть
-          </button>
-          <button class="btn danger" @click="remove(person.id)">Удалить</button>
+          <router-link :to="`/table/${person.id}`">
+            <button
+                class="btn"
+            >
+              Посмотреть
+            </button>
+          </router-link>
+
+          <button class="btn danger" @click="removeUser(person.id)">Удалить</button>
         </td>
       </tr>
       </tbody>
@@ -35,49 +37,22 @@
   </div>
 </template>
 <script>
-import axios from 'axios'
-import { ref, computed } from 'vue'
-import { useRouter } from 'vue-router'
+import { mapGetters } from "vuex";
 
 export default {
-  setup() {
-    const filter = ref('')
-    const router = useRouter()
-
-    const goToViewTable = (id) => {
-      router.push(`/table/${id}`)
-    }
-
-    return {
-      filter,
-      goToViewTable
-    }
-  },
-  data() {
-    return {
-      peopleList: []
-    }
-  },
   computed: {
-    Filters () {
-      console.clear()
-      console.log('filter', this.filter)
-      return this.peopleList
-          .filter(p => {
-        return this.filter ? p.first_name.toLowerCase().includes(this.filter.toLowerCase()) : true
-      })
-    }
+    ...mapGetters({
+      peopleList: 'peopleList',
+      search: 'search',
+    }),
   },
   mounted () {
-    axios.get('http://localhost:3000/people').then(({ data }) => {
-      this.peopleList = data
-    })
-
+    this.$store.dispatch('initData')
   },
   methods: {
-    remove (id) {
+    removeUser (id) {
       const personIdx = this.peopleList.findIndex(p => p.id === id)
-      this.peopleList.splice(personIdx, 1)
+      this.$store.dispatch('removeUser', personIdx)
 
       // axios.delete(`http://localhost:3000/people/${id}`)
     }

@@ -2,7 +2,7 @@
   <div class="card">
     <div class="header">
       <h1>Список пользователей</h1>
-      <button class="btn primary" @click="flag = true">Создать</button>
+      <button class="btn primary" @click="openModal">Создать</button>
     </div>
     <RequestTable />
   </div>
@@ -13,13 +13,18 @@
 <script>
 import RequestModal from "./RequestModal";
 import RequestTable from "./RequestTable";
-import {ref} from "vue";
+import { mapGetters } from 'vuex'
+
 export default {
   components: { RequestModal, RequestTable },
-  setup() {
-    const flag = ref(false)
-    return{
-      flag
+  computed: {
+    ...mapGetters({
+      flag: 'flag'
+    })
+  },
+  methods: {
+    openModal() {
+      this.$store.dispatch('openModal', true)
     }
   }
 }
